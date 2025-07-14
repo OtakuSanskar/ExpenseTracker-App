@@ -30,7 +30,7 @@ const RegisterScreen = ({navigation}) => {
     <KeyboardAvoidingView behavior="padding" style={styles.container} >
       <StatusBar style="light" />
       <Image
-        source={{ uri: "https://u7.uidownload.com/vector/771/239/vector-money-in-wallet-icon-.jpg"}}
+        source={{ uri: "https://u7.uidownload.com/vector/771/239/vector-money-in-wallet-icon-psd-psd.jpg"}}
         style={{ width: 100, height: 100, marginBottom: 50 }}
       />
       <Text h4 style={{ marginBottom: 50 }}>Create Account</Text>
