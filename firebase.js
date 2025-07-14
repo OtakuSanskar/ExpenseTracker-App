@@ -1,10 +1,16 @@
-import * as firebase from "firebase";
-
-import "firebase/auth";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import config from "./config";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
 
 const firebaseConfig = {
-  //your api keys
+  apiKey: config.API_KEY,
+  authDomain: "react-authentication-b1a3f.firebaseapp.com",
+  projectId: "react-authentication-b1a3f",
+  storageBucket: "react-authentication-b1a3f.firebasestorage.app",
+  messagingSenderId: "280416781730",
+  appId: "1:280416781730:web:7eb67183c623b80ce21efb",
+  measurementId: "G-MQ2VVFM50V"
 };
 
 let app;
