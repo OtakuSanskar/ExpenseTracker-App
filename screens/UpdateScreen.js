@@ -1,3 +1,13 @@
+import { View, Text, StyleSheet } from "react-native";
+
+const UpdateScreen = () => {
+  return (
+    <View style={styles.container}>
+      <Text>UpdateScreen</Text>
+    </View>
+  );
+};
+export default UpdateScreen;
 
 const styles = StyleSheet.create({
     container: {

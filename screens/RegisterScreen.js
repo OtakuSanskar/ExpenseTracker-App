@@ -1,3 +1,13 @@
+import { View, Text, StyleSheet } from "react-native";
+
+const RegisterScreen = () => {
+  return (
+    <View style={styles.container}>
+      <Text>Register Screen</Text>
+    </View>
+  );
+};
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
     container: {
