@@ -1,10 +1,153 @@
-import { View, Text, StyleSheet } from "react-native";
+import React, {use, useEffect, useLayoutEffect, useState} from "react";
+import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
+import { Text } from "react-native-elements";
+import { auth, db } from "../firebase";
+import { StatusBar } from "expo-status-bar";
+import { AntDesign, Feather, FontAwesome5 } from "@expo/vector-icons";
+import CustomListItem from "../components/CustomListItem";
+const HomeScreen = ({navigation}) => {
+  const [totalIncome, setTotalIncome] = useState([]);
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
+  const [totalExpense, setTotalExpense] = useState([]);
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const [filter, setFilter] = useState([]);
 
-const HomeScreen = () => {
+  useEffect(() => {
+    const unsubscribe =  db.collection("expense")
+      .orderBy("timestamp", "desc")
+      .onSnapshot(
+        (snapshot) => 
+          setTransactions(snapshot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        ) &
+        setTotalIncome(
+          snapshot.docs.map((doc) =>
+            doc.data()?.email === auth.currentUser.email &&
+            doc.data()?.type === "income"
+              ? doc.data().price
+              : 0
+          )
+        ) &
+        setTotalExpense(snapshot.docs.map((doc) =>
+          doc.data()?.email === auth.currentUser.email &&
+          doc.data()?.type === "income"
+            ? doc.data().price
+            : 0
+        ))
+      );
+    return unsubscribe;
+  }, []);
+  useEffect(() => {
+    if (totalIncome) {
+      if(totalIncome?.length == 0) {
+        setIncome(0);
+      } else {
+        setExpense(totalIncome?.reduce((a, b) => Number(a) + Number(b), 0));
+      }
+    }
+    if (totalExpense) {
+      if(totalExpense?.length == 0) {
+        setExpense(0);
+      } else {
+        setExpense(totalExpense?.reduce((a, b) => Number(a) + Number(b), 0));
+      }
+    }
+  }, [totalExpense, totalIncome, income, expense]);
+  useEffect(() => {
+    if(income || expense) {
+      setTotalBalance(income - expense);
+    } else {
+      setTotalBalance(0);
+    }
+  }, [totalIncome, totalExpense, income, expense]);
+  useEffect(() => {
+    if (transactions) {
+      setFilter(
+        transactions.filter((transaction) => 
+          transaction.data.email === auth.currentUser.email
+        )
+      );
+    }
+  }, [transactions]);
+  const signOutUser = () => {
+    auth.signOut().then(() => {
+      navigation.replace("Login");
+    }).catch((error) => alert(error.message));
+  };
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: `${auth.currentUser.displayName}`,
+      headerRight: () => (
+        <View style={{ flexDirection: "row", marginRight: 20 }}>
+          <TouchableOpacity onPress={signOutUser} activeOpacity={0.5}>
+            <Text style={{ fontWeight: "bold" }}>Logout</Text>
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+  }, [navigation])
   return (
+    <>
     <View style={styles.container}>
-      <Text>Home Screen</Text>
+      <StatusBar style="dark" />
+      <View style={styles.card}>
+        <View style={styles.cardTop} >
+          <Text style={{alignItems:"center", color:"white" }} >Total Balance</Text>
+          <Text style={{alignItems:"center", color:"white" }} h3 >$ {totalBalance.toFixed(2)}</Text>
+        </View>
+        <View style={styles.cardBottom}>
+          <View>
+            <View style={styles.cardBottomSame}>
+              <Feather name="arrow-down" size={24} color="green" />
+              <Text style={{ textAlign:"center", marginLeft:5 }}>Income</Text>
+            </View>
+            <Text h4 style={{ textAlign:"center" }}>{` $ ${income.toFixed(2)}`}</Text>
+          </View>
+          <View>
+            <View style={styles.cardBottomSame}>
+              <Feather name="arrow-up" size={24} color="red" />
+              <Text style={{ textAlign:"center", marginLeft:5 }}>Expense</Text>
+            </View>
+            <Text h4 style={{ textAlign:"center" }}>{` $ ${expense.toFixed(2)}`}</Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.recentTitle}>
+        <Text h4>Recent Transactions</Text>
+        <TouchableOpacity  activeOpacity={0.5} onPress={() => navigation.navigate("All")}>
+          <Text style={styles.seeAll}>See All</Text>
+        </TouchableOpacity>
+      </View>
+      { filter?.length>0 ? (<View style={styles.recentTransactions}>
+        <View>
+          <CustomListItem/>
+        </View>
+      </View>): (
+        <View style={styles.containerNull}>
+          <FontAwesome5 name="list-alt" size={50} />
+          <Text h4 style={{ marginTop: 10 }}>No Transactions Found</Text>
+        </View>
+      )}
     </View>
+    <View style={styles.addButton}>
+      <TouchableOpacity style={{alignItems:"center"}} activeOpacity={0.5} onPress={() => navigation.navigate("Home")}>
+        <AntDesign name="home" size={24} />
+        <Text style={{paddingTop:2}}>Home</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={{alignItems:"center"}} activeOpacity={0.5} onPress={() => navigation.navigate("Add")}>
+        <AntDesign name="plus" size={24} />
+        <Text style={{paddingTop:2}}>Add</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={{alignItems:"center"}} activeOpacity={0.5} onPress={() => navigation.navigate("All")}>
+        <FontAwesome5 name="list-alt" size={24} />
+        <Text style={{paddingTop:2}}>All</Text>
+      </TouchableOpacity>
+    </View>
+    </>
   );
 };
 export default HomeScreen;
@@ -69,6 +212,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     padding: 10,
+    paddingLeft: Platform.OS === 'android'? 0: 10,
+    paddingBottom: Platform.OS === 'android'? 23: 10,
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-around",
@@ -101,6 +246,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
+    marginTop: -130,
     width: "100%",
   },
 });

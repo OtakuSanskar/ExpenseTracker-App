@@ -15,7 +15,7 @@ const LoginScreen = ({ navigation }) => {
       auth
         .signInWithEmailAndPassword(email, password)
         .then(() => clearInput())
-        .catch((error) => alert(error.message));
+        .catch((error) => alert(error.message)&setSubmitLoading(false));
     } else {
       alert("All fields are required");
       setLoading(false);
@@ -24,6 +24,9 @@ const LoginScreen = ({ navigation }) => {
   const clearInput = () => {
     alert("Successfully logged in!");
     navigation.replace("Home");
+    setSubmitLoading(false);
+    setEmail("");
+    setPassword("");
   };
 
   useEffect(() => {

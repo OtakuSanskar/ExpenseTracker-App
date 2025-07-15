@@ -1,8 +1,8 @@
+import React, { useLayoutEffect, useState } from "react";
 import { View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import { Image, Input, Button, Text } from "react-native-elements";
 import { auth } from "../firebase";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
 
 const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
@@ -24,6 +24,10 @@ const RegisterScreen = ({navigation}) => {
   const clearInput = () => {
     alert("Successfully registered!");
     navigation.replace("Home");
+    setSubmitLoading(false);
+    setName("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
