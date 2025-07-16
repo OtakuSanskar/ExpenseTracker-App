@@ -1,4 +1,4 @@
-import React, {use, useEffect, useLayoutEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { Text } from "react-native-elements";
 import { auth, db } from "../firebase";
@@ -123,9 +123,15 @@ const HomeScreen = ({navigation}) => {
         </TouchableOpacity>
       </View>
       { filter?.length>0 ? (<View style={styles.recentTransactions}>
-        <View>
-          <CustomListItem/>
-        </View>
+        { filter?.slice(0, 3).map((info) => (
+          <View key={info.id}>
+            <CustomListItem
+              info={info.data}
+              navigation={navigation}
+              id ={info.id}
+            />
+          </View>
+        ))}
       </View>): (
         <View style={styles.containerNull}>
           <FontAwesome5 name="list-alt" size={50} />
