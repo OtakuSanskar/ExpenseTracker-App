@@ -7,7 +7,6 @@ import format from "date-fns/format";
 import { Picker } from "@react-native-picker/picker";
 import { auth, db } from "../firebase";
 import firebase from "firebase/compat/app";
-import { setDate } from "date-fns";
 const AddScreen = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
@@ -22,7 +21,7 @@ const AddScreen = ({ navigation }) => {
     });
   }, [navigation]);
   const createExpense = () => {
-    if( input &&  amount && date && selected && auth) {
+    if( input && amount && date && selected && auth) {
       setSubmitLoading(true);
       db.collection("expense").add({
         text: input,
@@ -53,18 +52,18 @@ const AddScreen = ({ navigation }) => {
   const showDatePicker = () => {
     showMode('date');
   };
-  const result = format(date, "dd/MM/yyyy");
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
   };
+  const result = format(date, "dd/MM/yyyy");
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <StatusBar style="dark" />
       <View style={styles.inputContainer}>
         <TextInput style={styles.input} placeholder="Enter text" value={input} onChangeText={(text) => setInput(text)} />
-        {show && (<DateTimePicker value={date} mode={mode} is24Hour={true} display="default" onChangeText={onChange} />)}
+        {show && (<DateTimePicker value={date} mode={mode} is24Hour={true} display="default" onChange={onChange} />)}
         <TextInput style={styles.input} placeholder="Enter amount" value={amount} onChangeText={(number) => setAmount(number)} keyboardType="numeric" />
         <Text style={styles.input} placeholder="Select Date" value={result} onPress={showDatePicker} >
           {result ? result : new Date()}

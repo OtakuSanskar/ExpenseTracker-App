@@ -34,7 +34,7 @@ const HomeScreen = ({navigation}) => {
         ) &
         setTotalExpense(snapshot.docs.map((doc) =>
           doc.data()?.email === auth.currentUser.email &&
-          doc.data()?.type === "income"
+          doc.data()?.type === "expense"
             ? doc.data().price
             : 0
         ))
@@ -46,7 +46,7 @@ const HomeScreen = ({navigation}) => {
       if(totalIncome?.length == 0) {
         setIncome(0);
       } else {
-        setExpense(totalIncome?.reduce((a, b) => Number(a) + Number(b), 0));
+        setIncome(totalIncome?.reduce((a, b) => Number(a) + Number(b), 0));
       }
     }
     if (totalExpense) {
