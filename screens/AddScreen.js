@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from "react";
 import { Text, Button } from "react-native-elements";
 import { View, StyleSheet, KeyboardAvoidingView, TextInput } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { DateTimePicker } from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import format from "date-fns/format";
 import { Picker } from "@react-native-picker/picker";
 import { auth, db } from "../firebase";
@@ -22,7 +22,7 @@ const AddScreen = ({ navigation }) => {
     });
   }, [navigation]);
   const createExpense = () => {
-    if( income &&  amount && date && selected && auth) {
+    if( input &&  amount && date && selected && auth) {
       setSubmitLoading(true);
       db.collection("expense").add({
         text: input,
