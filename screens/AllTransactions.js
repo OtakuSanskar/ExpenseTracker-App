@@ -34,7 +34,7 @@ const AllTransactions = ({navigation}) => {
   return (
     <>
       {
-        filter?.length === 0 ? (
+        filter?.length !== 0 ? (
           <SafeAreaView style={styles.container}>
             <ScrollView>
               {filter?.map((info) => (
