@@ -14,6 +14,12 @@
 - **Responsive UI:** User-friendly interface using React Native Elements and custom styling.
 - **Navigation:** Multi-screen navigation for login, registration, transaction listing, adding, and updating entries.
 
+## Demo
+
+Check out the demo of the Expense Tracker App:
+
+**Download and Try:** [Drive Link](https://drive.google.com/file/d/1AwqXnHsaW9y-yWMizXVbHB0w-u2ngow1/view?usp=drive_link)
+
 ## Tech Stack Used
 
 - **Frontend Framework:**  
